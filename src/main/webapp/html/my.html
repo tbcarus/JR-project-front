@@ -10,10 +10,11 @@
 <h2>Accounts list:</h2>
 <div>
     <label>Count per page:
-        <select id="countPerPage">
-            <option value="3">3-</option>
-            <option value="10">10-</option>
-            <option value="20">20-</option>
+        <select id="pageSize" onchange="pageSizeChange(this.value)">
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
         </select>
     </label>
 </div>
@@ -27,13 +28,15 @@
         <div style="width: 10%">Level</div>
         <div style="width: 10%">Birthday</div>
         <div style="width: 10%">Banned</div>
+        <div style="width: 10%;">Edit</div>
+        <div style="width: 10%;">Delete</div>
     </div>
     <div id="mainDivTable">
 
     </div>
 </div>
 <div id="pages">
-Pages: 
+
 </div>
 
 

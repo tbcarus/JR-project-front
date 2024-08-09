@@ -1,18 +1,25 @@
-window.onload = async function getPlayers() {
-    let response = await fetch('rest/players');
-    let players = await response.json();
-    console.log(players);
+let pageNumberGlobal = 0;
+let pageSizeGlobal = 3;
 
-    console.log(await getAccountsCount());
-
+window.onload = async function () {
+    let players = await getPlayers(pageNumberGlobal, pageSizeGlobal);
     fillTable(players);
+    await pagesLabelView(0);
+}
 
-    pagesLabelView();
+
+async function getPlayers(pageNumber, pageSize) {
+    let response = await fetch('rest/players?pageNumber=' + pageNumber + '&pageSize=' + pageSize);
+    return await response.json();
+
+    // fillTable(players);
+    // await pagesLabelView();
 }
 
 function fillTable(players) {
+    let mainDiv = document.getElementById("mainDivTable");
+    mainDiv.innerHTML = '';
     for (let player of players) {
-        let mainDiv = document.getElementById("mainDivTable");
         let row = document.createElement("div");
         row.style.display = "flex";
 
@@ -57,7 +64,31 @@ function fillTable(players) {
         colBanned.innerHTML = player.banned;
         row.append(colBanned);
         mainDiv.append(row);
+
+        let colEdit = document.createElement("div");
+        colEdit.style.width = "10%";
+        colEdit.innerHTML = '<img src="img/edit.png" style="width: 25px">';
+        row.append(colEdit);
+        mainDiv.append(row);
+
+        let colDelete = document.createElement("div");
+        colDelete.style.width = "10%";
+        colDelete.innerHTML = '<img src="img/delete.png" style="width: 25px">';
+        colDelete.onclick = function () {
+            deletePlayer(player.id);
+        };
+        row.append(colDelete);
+        mainDiv.append(row);
     }
+}
+
+async function deletePlayer(playerId) {
+    let pageSize = document.getElementById("pageSize");
+    await fetch('rest/players/' + playerId, {
+        method: 'DELETE'
+    })
+    let players = await getPlayers(pageNumberGlobal, pageSizeGlobal);
+    fillTable(players);
 }
 
 async function getAccountsCount() {
@@ -66,14 +97,36 @@ async function getAccountsCount() {
     return count;
 }
 
-async function pagesLabelView() {
-    let countPerPage = document.getElementById('countPerPage');
+async function pageSizeChange(value) {
+    pageSizeGlobal = value;
+    let players = await getPlayers(0, value);
+    fillTable(players);
+    await pagesLabelView(0);
+}
+
+async function pagesLabelView(pageNumber) {
+    // let countPerPage = document.getElementById('pageSize');
     let divPages = document.getElementById("pages");
-    let countPages = Math.ceil(await getAccountsCount() / countPerPage.value);
+    let countPages = Math.ceil(await getAccountsCount() / pageSizeGlobal);
+    divPages.innerHTML = '';
+    divPages.innerHTML = 'Pages: ';
     for (let i = 0; i < countPages; i++) {
         let input = document.createElement("input");
         input.type = "button";
         input.value = i + 1;
+        input.onclick = function () {
+            getPage(i, pageSizeGlobal)
+        };
+        if (i === pageNumber) {
+            input.style.color = 'red';
+        }
         divPages.append(input);
     }
+}
+
+async function getPage(pageNumber, pageSize) {
+    pageNumberGlobal = pageNumber;
+    let players = await getPlayers(pageNumber, pageSize);
+    fillTable(players);
+    await pagesLabelView(pageNumber);
 }
