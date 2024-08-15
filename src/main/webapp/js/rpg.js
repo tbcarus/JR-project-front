@@ -2,11 +2,14 @@ let pageNumberGlobal = 0;
 let pageSizeGlobal = 3;
 
 window.onload = async function () {
-    let players = await getPlayers(pageNumberGlobal, pageSizeGlobal);
-    fillTable(players);
-    await pagesLabelView(0);
+    await refreshTable();
 }
 
+async function refreshTable(){
+    let players = await getPlayers(pageNumberGlobal, pageSizeGlobal);
+    fillTable(players);
+    await pagesLabelView(pageNumberGlobal);
+}
 
 async function getPlayers(pageNumber, pageSize) {
     let response = await fetch('rest/players?pageNumber=' + pageNumber + '&pageSize=' + pageSize);
@@ -185,13 +188,26 @@ async function editRow(rowId, player) {
     colBanned.append(selectBan);
     row.append(colBanned);
 
-    let colEdit = document.createElement("div");
-    colEdit.style.width = "10%";
-    colEdit.innerHTML = '<img src="img/save.png" style="width: 25px; cursor: pointer">';
-    colEdit.onclick = function () {
-        // TODO POST
+    let colSave = document.createElement("div");
+    colSave.style.width = "10%";
+    colSave.innerHTML = '<img src="img/save.png" style="width: 25px; cursor: pointer">';
+    colSave.onclick = async function () {
+        player.name = inputName.value;
+        player.title = inputTitle.value;
+        player.race = selectRace.value;
+        player.profession = selectProf.value;
+        player.banned = selectBan.value;
+        let jsPlayer = JSON.stringify(player);
+        let response = await fetch('rest/players/' + player.id, {
+            method: 'POST',
+            headers: {
+                'Content-type' : 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(player)
+        });
+        await refreshTable();
     };
-    row.append(colEdit);
+    row.append(colSave);
 
     let colDelete = document.createElement("div");
     colDelete.style.width = "10%";
@@ -210,8 +226,7 @@ async function deletePlayer(playerId) {
 
 async function getAccountsCount() {
     let response = await fetch('rest/players/count');
-    let count = await response.json();
-    return count;
+    return await response.json();
 }
 
 async function pageSizeChange(value) {
