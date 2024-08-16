@@ -38,11 +38,76 @@
 <div id="pages">
 
 </div>
+<hr>
+<form id="newUserForm">
+    <fieldset>
+        <legend class="legend-black">Create new account:</legend>
+        <div>
+            <label>Name:
+                <input id="name-new" name="name" minlength="1" maxlength="12">
+            </label>
+        </div>
+        <div>
+            <label>Title:
+                <input id="title-new" name="title" minlength="1" maxlength="30">
+            </label>
+        </div>
+        <div>
+            <label>Race:
+                <select id="race-new" name="race">
+                    <option value="HUMAN">HUMAN</option>
+                    <option value="DWARF">DWARF</option>
+                    <option value="ELF">ELF</option>
+                    <option value="GIANT">GIANT</option>
+                    <option value="ORC">ORC</option>
+                    <option value="TROLL">TROLL</option>
+                    <option value="HOBBIT">HOBBIT</option>
+                </select>
+            </label>
+        </div>
+        <div>
+            <label>Profession:
+                <select id="profession-new" name="profession">
+                    <option value="WARRIOR">WARRIOR</option>
+                    <option value="ROGUE">ROGUE</option>
+                    <option value="SORCERER">SORCERER</option>
+                    <option value="CLERIC">CLERIC</option>
+                    <option value="PALADIN">PALADIN</option>
+                    <option value="NAZGUL">NAZGUL</option>
+                    <option value="WARLOCK">WARLOCK</option>
+                    <option value="DRUID">DRUID</option>
+                </select>
+            </label>
+        </div>
+        <div>
+            <label>Level:
+                <input id="level-new" name="level" type="number" min="0" max="100">
+            </label>
+        </div>
+        <div>
+            <label>Birthday:
+                <input id="birthday-new" type="date" name="birthday">
+            </label>
+        </div>
+        <div>
+            <label>Banned:
+                <select id="banned-new" name="banned">
+                    <option value='true'>true</option>
+                    <option value='false'>false</option>
+                </select>
+            </label>
+        </div>
+        <div>
+            <img src="img/save.png" style="width: 25px; cursor: pointer" onclick="savePlayer()">
+<!--            <input type="button" onclick="savePlayer()" value="Save"></input>-->
+        </div>
+    </fieldset>
+</form>
 
 
 </body>
 
-<script >
+<script>
 
 </script>
 </html>

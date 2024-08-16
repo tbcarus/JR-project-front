@@ -215,6 +215,41 @@ async function editRow(rowId, player) {
 
 }
 
+async function savePlayer() {
+
+    let name = document.getElementById('name-new');
+    let title = document.getElementById('title-new');
+    let race = document.getElementById('race-new');
+    let profession = document.getElementById('profession-new');
+    let level = document.getElementById('level-new');
+    let birthday = document.getElementById('birthday-new');
+    let banned = document.getElementById('banned-new');
+
+    let response = await fetch('rest/players', {
+        method: 'POST',
+        headers: {
+            'Content-type' : 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify({
+            "name": name.value,
+            "title": title.value,
+            "race": race.value,
+            "profession": profession.value,
+            "level": level.value,
+            "birthday": new Date(birthday.value).getTime(),
+            "banned": banned.value
+        })
+    });
+    await refreshTable();
+    name.value = '';
+    title.value = '';
+    level.value = '';
+    birthday.value = '';
+    banned.value = 'true';
+    race.value = 'HUMAN';
+    profession.value = 'WARRIOR';
+}
+
 async function deletePlayer(playerId) {
     let pageSize = document.getElementById("pageSize");
     await fetch('rest/players/' + playerId, {
